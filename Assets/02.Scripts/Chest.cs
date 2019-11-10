@@ -34,7 +34,10 @@ public class Chest : MonoBehaviour
             isShowItem = true;
             GameObject inGameItem = Instantiate(item, transform.position + (Vector3.up * 1.5f), Quaternion.identity);
             yield return new WaitForSeconds(1.0f);
-            inGameItem.GetComponent<CapsuleCollider2D>().enabled = true;
+            if (inGameItem.GetComponent <CapsuleCollider2D>() != null)
+            {
+                inGameItem.GetComponent<CapsuleCollider2D>().enabled = true;
+            }
             
             yield return null;
         }
