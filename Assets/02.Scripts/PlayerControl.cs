@@ -7,6 +7,8 @@ public class PlayerControl : MonoBehaviour
     public GameManager gameManager;
     public float maxSpeed;
     public float jumpPower;
+    public bool shield;
+    public GameObject shieldObject;
 
     [Header("오디오변수")]
     public AudioClip audioJump;
@@ -37,8 +39,11 @@ public class PlayerControl : MonoBehaviour
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         capsuleCollider = GetComponent<CapsuleCollider2D>();
+
+        shield = false;
     }
 
+    // 사운드
     void PlaySound(string action)
     {
         switch (action)
@@ -97,6 +102,7 @@ public class PlayerControl : MonoBehaviour
         {
             animator.SetBool("isWalking", true);
         }
+
     }
     private void FixedUpdate()
     {
@@ -130,6 +136,7 @@ public class PlayerControl : MonoBehaviour
         
     }
 
+    // 적과 충돌할 떄
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.tag == "Enemy")
@@ -146,6 +153,7 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    // 아이템 먹을 때
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Item"))
@@ -154,6 +162,7 @@ public class PlayerControl : MonoBehaviour
             bool isSCoin = collision.gameObject.name.Contains("SCoin");
             bool isGCoin = collision.gameObject.name.Contains("GCoin");
             bool isGem = collision.gameObject.name.Contains("Gem");
+            bool isShield = collision.gameObject.name.Contains("Shield");
 
             if (isBCoin)
                 gameManager.stagePoint += BcoinScore;
@@ -161,8 +170,11 @@ public class PlayerControl : MonoBehaviour
                 gameManager.stagePoint += ScoinScore;
             else if (isGCoin)
                 gameManager.stagePoint += GcoinScore;
-            else
+            else if (isGem)
                 gameManager.stagePoint += gemScore;
+            else if (isShield)
+                StartCoroutine(collision.gameObject.GetComponent<Item>().Shield());
+               
             PlaySound("ITEM");
             collision.gameObject.SetActive(false);
         }
@@ -174,6 +186,7 @@ public class PlayerControl : MonoBehaviour
         
     }
 
+    // 보물상자 열기
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Chest"))

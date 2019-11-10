@@ -16,12 +16,17 @@ public class GameManager : MonoBehaviour
     public PlayerControl player;
     public GameObject[] stages;
 
+    [Header("UI")]
+    public GameObject canvas;
     public Image[] UIhealth;
     public Text UIpoint;
     public Text UIstage;
     public GameObject UIrestartButton;
 
-
+    private void Start()
+    {
+        canvas.SetActive(true);
+    }
 
 
     public void NextStage()
