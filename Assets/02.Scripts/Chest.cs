@@ -8,13 +8,13 @@ public class Chest : MonoBehaviour
     public bool isOpen;
     public bool isShowItem;
     Animator anim;
-    AudioSource audio;
+    AudioSource sound;
     private void Start()
     {
         isOpen = false;
         isShowItem = false;
         anim = GetComponent<Animator>();
-        audio = GetComponent<AudioSource>();
+        sound = GetComponent<AudioSource>();
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -22,7 +22,7 @@ public class Chest : MonoBehaviour
         if (isOpen & !isShowItem)
         {
             anim.SetTrigger("isOpen");
-            audio.Play();
+            sound.Play();
             StartCoroutine(CreateItem());
         }
     }
