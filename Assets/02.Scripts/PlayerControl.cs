@@ -16,6 +16,13 @@ public class PlayerControl : MonoBehaviour
     public AudioClip audioDie;
     public AudioClip audioFinish;
 
+    [Header("점수")]
+    public int BcoinScore = 50;
+    public int ScoinScore = 100;
+    public int GcoinScore = 500;
+    public int gemScore = 1000;
+    public int enemyScore = 150;
+
     Rigidbody2D rigid;
     SpriteRenderer spriteRenderer;
     Animator animator;
@@ -130,7 +137,7 @@ public class PlayerControl : MonoBehaviour
             if (rigid.velocity.y < 0 && transform.position.y > collision.transform.position.y) //몬스터 위에 있음 + 아래로 낙하중 = 밟음
             {
                 OnAttack(collision.transform);
-                gameManager.stagePoint += 150;
+                gameManager.stagePoint += enemyScore;
             }
             else
             {
@@ -146,14 +153,16 @@ public class PlayerControl : MonoBehaviour
             bool isBCoin = collision.gameObject.name.Contains("BCoin");
             bool isSCoin = collision.gameObject.name.Contains("SCoin");
             bool isGCoin = collision.gameObject.name.Contains("GCoin");
+            bool isGem = collision.gameObject.name.Contains("Gem");
 
             if (isBCoin)
-                gameManager.stagePoint += 50;
+                gameManager.stagePoint += BcoinScore;
             else if (isSCoin)
-                gameManager.stagePoint += 100;
+                gameManager.stagePoint += ScoinScore;
+            else if (isGCoin)
+                gameManager.stagePoint += GcoinScore;
             else
-                gameManager.stagePoint += 300;
-
+                gameManager.stagePoint += gemScore;
             PlaySound("ITEM");
             collision.gameObject.SetActive(false);
         }
@@ -164,6 +173,18 @@ public class PlayerControl : MonoBehaviour
         }
         
     }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Chest"))
+        {
+            if (Input.GetKeyDown(KeyCode.Z))
+            {
+                collision.GetComponent<Chest>().isOpen = true;
+            }
+        }
+    }
+
 
     void OnAttack(Transform enemy)
     {
