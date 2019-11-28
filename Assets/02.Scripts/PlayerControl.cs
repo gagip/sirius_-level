@@ -143,8 +143,16 @@ public class PlayerControl : MonoBehaviour
         {
             if (rigid.velocity.y < 0 && transform.position.y > collision.transform.position.y) //몬스터 위에 있음 + 아래로 낙하중 = 밟음
             {
-                OnAttack(collision.transform);
-                gameManager.stagePoint += enemyScore;
+                // EnemyControl이 있으면 몬스터
+                if (collision.gameObject.GetComponent<EnemyControl>() != null)
+                {
+                    OnAttack(collision.transform);
+                    gameManager.stagePoint += enemyScore;
+                }
+                else
+                {
+                    OnDamaged(collision.transform.position);
+                }
             }
             else
             {
